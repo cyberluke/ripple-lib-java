@@ -4,16 +4,16 @@ import com.ripple.core.coretypes.Amount;
 import com.ripple.core.types.known.tx.Transaction;
 import org.json.JSONObject;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
 import static com.ripple.core.coretypes.RippleDate.fromSecondsSinceRippleEpoch;
-import static org.slf4j.LoggerFactory.getLogger;
 
 // TODO, really want to split this into a few classes
 // ServerStatus / LedgerClosed events.
 public class ServerInfo {
-    private final Logger logger = getLogger(ServerInfo.class);
+    private final Logger logger = LoggerFactory.getLogger(ServerInfo.class);
 
     public boolean updated = false;
 

@@ -9,9 +9,11 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-
-
     compile project(':ripple-core')
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.19'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.10.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.10.0'
+
     testCompile project(':ripple-client-java-websocket-transport')
     testCompile 'junit:junit:4.12'
     testCompile group: 'org.reflections', name: 'reflections', version: '0.9.10'
