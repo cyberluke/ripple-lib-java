@@ -3,14 +3,18 @@ package com.ripple.client.subscriptions;
 import com.ripple.core.coretypes.Amount;
 import com.ripple.core.types.known.tx.Transaction;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 
 import java.util.Date;
 
 import static com.ripple.core.coretypes.RippleDate.fromSecondsSinceRippleEpoch;
+import static org.slf4j.LoggerFactory.getLogger;
 
 // TODO, really want to split this into a few classes
 // ServerStatus / LedgerClosed events.
 public class ServerInfo {
+    private final Logger logger = getLogger(ServerInfo.class);
+
     public boolean updated = false;
 
     public int fee_base;
@@ -29,16 +33,25 @@ public class ServerInfo {
     public String server_status;
     public String validated_ledgers;
 
+    protected Amount fee_unit_computed = Amount.fromString("0.0");
+
     public Amount computeFee(int units) {
         if (!updated) {
             throw new IllegalStateException("No information from the server yet");
         }
 
-        double fee_unit = fee_base / fee_ref, fee;
+        double fee_unit = fee_base / fee_ref;
+        double fee;
         fee_unit *= load_factor / load_base;
         fee = units * fee_unit;
         String s = String.valueOf((long) Math.ceil(fee));
-        return Amount.fromString(s);
+        Amount amount = Amount.fromString(s);
+        if (fee_unit_computed.compareTo(amount) != 0) {
+            logger.info("Fee changed from " + fee_unit_computed + " to " + amount);
+        }
+        fee_unit_computed = amount;
+
+        return amount;
     }
 
     public Amount transactionFee(Transaction transaction) {
